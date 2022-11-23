@@ -33,8 +33,8 @@ public class R2DBCConfiguration extends AbstractR2dbcConfiguration {
         initializer.setConnectionFactory(connectionFactory());
 
         CompositeDatabasePopulator databasePopulator = new CompositeDatabasePopulator();
-        databasePopulator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("product_schema.sql")));
-        databasePopulator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("product_data.sql")));
+        databasePopulator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("schema.sql")));
+        databasePopulator.addPopulators(new ResourceDatabasePopulator(new ClassPathResource("data.sql")));
         initializer.setDatabasePopulator(databasePopulator);
         return initializer;
     }

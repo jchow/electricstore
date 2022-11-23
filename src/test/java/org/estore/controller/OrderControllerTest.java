@@ -1,7 +1,7 @@
 package org.estore.controller;
 
 import org.estore.model.BasketItem;
-import org.estore.model.ProductOrder;
+import org.estore.model.CustomerOrder;
 import org.estore.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +15,6 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(OrderController.class)
@@ -34,14 +32,14 @@ class OrderControllerTest {
     @Test
     void checkout() {
         BigDecimal totalCost = new BigDecimal("110.0");
-        ProductOrder productOrder = ProductOrder.builder().id(0L)
+        CustomerOrder productOrder = CustomerOrder.builder().id(0L)
                 .customerId(CUSTOMER_ID)
                 .totalCost(totalCost)
                 .items(List.of(basketItem1, basketItem2)).build();
 
         Mockito.when(orderService.checkout(CUSTOMER_ID)).thenReturn(Mono.just(productOrder));
 
-        webTestClient.get().uri("/basket/checkout/{id}", CUSTOMER_ID).exchange()
+        webTestClient.get().uri("/order/checkout/{id}", CUSTOMER_ID).exchange()
                 .expectStatus().isOk().expectBody()
                 .jsonPath("$.customerId").isEqualTo(CUSTOMER_ID)
                 .jsonPath("$.totalCost").isEqualTo(totalCost);

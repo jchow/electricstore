@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -17,7 +18,7 @@ public class Discount {
     @Generated
     private long id;
     private String description;
-    private List<Long> productIds;
-    private double discount;
+    private String code;
+    private List<Long> productIds; //List of product applicable for this discount
 
 }

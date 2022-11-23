@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
-@Table("productOrder")
-public class ProductOrder {
+@Table("customerOrder")
+public class CustomerOrder {
 
     @Id
     @Generated

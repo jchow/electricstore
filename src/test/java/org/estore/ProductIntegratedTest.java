@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ActiveProfiles("TEST")
 @AutoConfigureWebTestClient
-public class IntegratedTest {
+public class ProductIntegratedTest {
 
     @Autowired
     private WebTestClient webTestClient;

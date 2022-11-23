@@ -1,6 +1,6 @@
 package org.estore.controller;
 
-import org.estore.model.ProductOrder;
+import org.estore.model.CustomerOrder;
 import org.estore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,7 +18,7 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/checkout/{id}")
-    public Mono<ProductOrder> checkout(@PathVariable long id) {
+    public Mono<CustomerOrder> checkout(@PathVariable long id) {
         return orderService.checkout(id);
     }
 }
