@@ -4,11 +4,12 @@
 
 ### In memory database - H2
 
-### To Be finished due to shortage of time
-* Discount service to implement discount logic per the discount id
-* Order service to checkout whatever is in a customer basket
-* Basket service to update the order according to the current products and discounts
+### To Be Done
+* Order service save doesn't seem to work in integrated test
 
+
+### Commands
+./mvnw spring-boot:run
 
 #### Original Question
 
