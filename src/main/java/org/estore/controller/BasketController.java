@@ -37,8 +37,8 @@ public class BasketController {
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<BasketItem> create(@RequestBody BasketItem basketItem){
         Mono<BasketItem> basketItemMono = basketService.create(basketItem);
-        orderService.update(basketItem);
         // Calculate total amount with discount on the fly
+        orderService.update(basketItem);
         return basketItemMono;
     }
 

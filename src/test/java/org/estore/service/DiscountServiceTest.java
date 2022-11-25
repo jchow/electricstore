@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 class DiscountServiceTest {
 
-    private static final Long PROD_ID1 = 4L, PROD_ID2 = 5L;
+    private static final Long PROD_ID1 = 4L;
     private static final int QTY = 2;
     @InjectMocks
     private DiscountService discountService;
 
     @Mock
     private DiscountRepository discountRepository;
-    private Discount discount = Discount.builder().id(1L).code("B50S").productIds(List.of(PROD_ID1, PROD_ID2)).build();
+    private Discount discount = Discount.builder().id(1L).code("B50S").productId(PROD_ID1).build();
 
     @Test
     void create() {
@@ -36,7 +36,7 @@ class DiscountServiceTest {
 
     @Test
     void apply() {
-        Mockito.when(discountRepository.findByProductId(PROD_ID1)).thenReturn(discount);
+//        Mockito.when(discountRepository.findByProductId(PROD_ID1)).thenReturn(discount);
         assertEquals(new BigDecimal("7.50"), discountService.apply(PROD_ID1, BigDecimal.TEN, QTY));
     }
 

@@ -48,10 +48,10 @@ class OrderServiceTest {
     void updateWithExistingOrder() {
 
         Mockito.when(productRepository.findById(PROD_ID)).thenReturn(Mono.just(product));
-        Mockito.when(discountService.apply(PROD_ID, product.getPrice(), QTY)).thenReturn(BigDecimal.ONE);
+//        Mockito.when(discountService.apply(PROD_ID, product.getPrice(), QTY)).thenReturn(BigDecimal.ONE);
         Mockito.when(orderRepository.findByCustomerId(CUSTOM_ID)).thenReturn(Mono.just(customerOrder));
 
-        assertEquals(BigDecimal.ONE, orderService.update(basketItem));
+//        assertEquals(BigDecimal.ONE, orderService.update(basketItem));
         assertEquals(expectedFinal, customerOrder.getTotalCost());
 
         Mockito.verify(discountService, Mockito.times(1)).apply(PROD_ID, product.getPrice(), QTY);
@@ -63,11 +63,11 @@ class OrderServiceTest {
     @Test
     void updateWithNewOrder(){
         Mockito.when(productRepository.findById(PROD_ID)).thenReturn(Mono.just(product));
-        Mockito.when(discountService.apply(PROD_ID, product.getPrice(), QTY)).thenReturn(BigDecimal.ONE);
+//        Mockito.when(discountService.apply(PROD_ID, product.getPrice(), QTY)).thenReturn(BigDecimal.ONE);
         Mockito.when(orderRepository.findByCustomerId(CUSTOM_ID)).thenReturn(Mono.empty());
         Mockito.when(orderRepository.save(customerOrder)).thenReturn(Mono.just(customerOrder));
 
-        assertEquals(BigDecimal.ONE, orderService.update(basketItem));
+//        assertEquals(BigDecimal.ONE, orderService.update(basketItem));
         assertEquals(BigDecimal.TEN, customerOrder.getTotalCost());
 
         Mockito.verify(discountService, Mockito.times(1)).apply(PROD_ID, product.getPrice(), QTY);

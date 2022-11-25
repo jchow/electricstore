@@ -16,9 +16,7 @@ import java.util.List;
 public class CustomerOrder {
 
     @Id
-    @Generated
     private long id;
     private long customerId;
-    private List<BasketItem> items;
     private BigDecimal totalCost;
 }

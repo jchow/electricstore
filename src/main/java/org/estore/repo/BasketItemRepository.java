@@ -7,6 +7,6 @@ import reactor.core.publisher.Flux;
 
 public interface BasketItemRepository extends ReactiveCrudRepository<BasketItem,Long> {
 
-    @Query("select * from basketItem where customerId = $1")
+    @Query("select * from basketItem where customer_id = $1")
     Flux<BasketItem> findByCustomerId(long customerId);
 }

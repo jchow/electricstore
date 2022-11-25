@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 public class Product {
 
     @Id
-    @Generated
     private Long id;
     private String name;
     private BigDecimal price;
