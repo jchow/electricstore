@@ -21,4 +21,9 @@ public class OrderController {
     public Mono<CustomerOrder> checkout(@PathVariable long id) {
         return orderService.checkout(id);
     }
+
+    @GetMapping("/customer/{id}")
+    public Mono<CustomerOrder> get(@PathVariable long id) {
+        return orderService.getOrder(id);
+    }
 }

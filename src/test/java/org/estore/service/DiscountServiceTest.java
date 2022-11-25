@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -36,8 +37,9 @@ class DiscountServiceTest {
 
     @Test
     void apply() {
-//        Mockito.when(discountRepository.findByProductId(PROD_ID1)).thenReturn(discount);
-        assertEquals(new BigDecimal("7.50"), discountService.apply(PROD_ID1, BigDecimal.TEN, QTY));
+        Mockito.when(discountRepository.findByProductId(PROD_ID1)).thenReturn(Flux.just(discount));
+        StepVerifier.create(discountService.apply(PROD_ID1, BigDecimal.TEN, QTY))
+                .expectNext(new BigDecimal("7.50")).verifyComplete();
     }
 
     @Test

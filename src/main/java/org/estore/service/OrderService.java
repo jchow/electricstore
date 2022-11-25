@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
 @Service
 public class OrderService {
 
@@ -31,37 +30,36 @@ public class OrderService {
     public void update(BasketItem basketItem) {
         long customerId = basketItem.getCustomerId();
         long productId = basketItem.getProductId();
-        BigDecimal result;
 
         Mono<Product> productMono = productRepository.findById(productId);
         Mono<CustomerOrder> order = getCustomerOrder(customerId);
 
-        Mono<BigDecimal> debugd = discountService.apply(productId, BigDecimal.ONE, basketItem.getQuantity())
-                .reduce(BigDecimal.ZERO, BigDecimal::add).defaultIfEmpty(BigDecimal.ZERO);
-
-        debugd.subscribe();
-
-        productMono.map(p
+        CustomerOrder test = CustomerOrder.builder().cost(BigDecimal.ZERO).customerId(customerId).build();
+        orderRepository.save(test);
+        order.subscribe(o ->orderRepository.save(o));
+        productMono.subscribe(t -> System.out.println("Debug====== saved. Id = " + t.getId()));
+        productMono.subscribe(p
                 -> {
             Mono<BigDecimal> discounted = discountService.apply(productId, p.getPrice(), basketItem.getQuantity())
                 .reduce(BigDecimal.ZERO, BigDecimal::add).defaultIfEmpty(BigDecimal.ZERO);
             discounted.subscribe(d -> order.subscribe(o -> {
-                o.setTotalCost(finalCost(o, d));
-                orderRepository.save(o);
+                o.setCost(finalCost(o, d));
             }));
-            return discounted;
         });
     }
 
     private BigDecimal finalCost(CustomerOrder order, BigDecimal discounted) {
-        if (order.getTotalCost() == null){
+        if (order.getCost() == null){
             return discounted;
         }
-        return order.getTotalCost().add(discounted);
+        return order.getCost().add(discounted);
     }
 
     private Mono<CustomerOrder> getCustomerOrder(long customerId) {
-        return orderRepository.findByCustomerId(customerId).defaultIfEmpty(CustomerOrder.builder().customerId(customerId).build());
+        CustomerOrder defaultOrder = CustomerOrder.builder().cost(BigDecimal.ZERO).customerId(customerId).build();
+        Mono<CustomerOrder> order = orderRepository.findByCustomerId(customerId).defaultIfEmpty(defaultOrder);
+        order.subscribe(o ->orderRepository.save(o));
+        return order;
     }
 
     public Mono<CustomerOrder> checkout(Long customerId) {
@@ -69,5 +67,9 @@ public class OrderService {
         return orderRepository.findByCustomerId(customerId)
                 .flatMap(orderFound -> orderRepository.delete(orderFound)
                 .then(Mono.just(orderFound)));
+    }
+
+    public Mono<CustomerOrder> getOrder(long id) {
+        return orderRepository.findByCustomerId(id);
     }
 }

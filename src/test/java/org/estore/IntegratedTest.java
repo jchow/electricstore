@@ -15,10 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -45,7 +45,7 @@ public class IntegratedTest {
     private final BasketItem chickenItem = BasketItem.builder().id(1L).customerId(CUSTOMER_ID).productId(chicken.getId()).quantity(3).build();
     private final BasketItem catItem = BasketItem.builder().id(2L).customerId(CUSTOMER_ID).productId(cat.getId()).quantity(9).build();
     private final Discount B50S = Discount.builder().id(1L).description("Test").code(DiscountCode.B50S.name()).productId(chicken.getId()).build();
-    private final CustomerOrder customerOrder = CustomerOrder.builder().customerId(CUSTOMER_ID).totalCost(new BigDecimal("30.5")).build();
+    private final CustomerOrder customerOrder = CustomerOrder.builder().customerId(CUSTOMER_ID).cost(new BigDecimal("30.5")).build();
 
     @Order(1)
     @Test
@@ -126,21 +126,27 @@ public class IntegratedTest {
                 .expectBody(BasketItem.class)
                 .value(d -> assertEquals(d, chickenItem));
 
+//
+//        basketItem = BasketItem.builder().customerId(CUSTOMER_ID).productId(cat.getId()).quantity(9).build();
+//        webTestClient.post().uri("/basketItem/create").contentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE))
+//                .body(Mono.just(basketItem), BasketItem.class)
+//                .exchange()
+//                .expectStatus()
+//                .isCreated()
+//                .expectBody(BasketItem.class)
+//                .value(d -> assertEquals(d, catItem));
+//
+//        webTestClient.get().uri("/basketItem/items/{id}", CUSTOMER_ID).accept(MediaType.APPLICATION_JSON)
+//                .exchange()
+//                .expectStatus()
+//                .isOk()
+//                .expectBodyList(BasketItem.class).hasSize(2).contains(catItem).contains(chickenItem);
 
-        basketItem = BasketItem.builder().customerId(CUSTOMER_ID).productId(cat.getId()).quantity(9).build();
-        webTestClient.post().uri("/basketItem/create").contentType(MediaType.valueOf(MediaType.APPLICATION_JSON_VALUE))
-                .body(Mono.just(basketItem), BasketItem.class)
-                .exchange()
-                .expectStatus()
-                .isCreated()
-                .expectBody(BasketItem.class)
-                .value(d -> assertEquals(d, catItem));
-
-        webTestClient.get().uri("/basketItem/items/{id}", CUSTOMER_ID).accept(MediaType.APPLICATION_JSON)
+        webTestClient.get().uri("/order/customer/{id}", CUSTOMER_ID).accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(BasketItem.class).hasSize(2).contains(catItem).contains(chickenItem);
+                .expectBodyList(CustomerOrder.class).hasSize(1).contains(customerOrder);
 
         webTestClient.delete().uri("/basketItem/remove/{id}", catItem.getId()).accept(MediaType.APPLICATION_JSON)
                 .exchange()

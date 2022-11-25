@@ -1,6 +1,5 @@
 package org.estore.controller;
 
-import org.estore.model.BasketItem;
 import org.estore.model.CustomerOrder;
 import org.estore.service.OrderService;
 import org.junit.jupiter.api.Test;
@@ -14,7 +13,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(OrderController.class)
@@ -30,7 +28,7 @@ class OrderControllerTest {
         BigDecimal totalCost = new BigDecimal("110.0");
         CustomerOrder productOrder = CustomerOrder.builder().id(0L)
                 .customerId(CUSTOMER_ID)
-                .totalCost(totalCost).build();
+                .cost(totalCost).build();
 
         Mockito.when(orderService.checkout(CUSTOMER_ID)).thenReturn(Mono.just(productOrder));
 
